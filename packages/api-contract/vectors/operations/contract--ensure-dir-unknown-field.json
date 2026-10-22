@@ -1,0 +1,11 @@
+{
+  "case": "contract--ensure-dir-unknown-field",
+  "operations": [
+    {
+      "op": "ensure_dir",
+      "path": "${project}/.claude",
+      "recursive": true
+    }
+  ],
+  "refused_by": "contract"
+}

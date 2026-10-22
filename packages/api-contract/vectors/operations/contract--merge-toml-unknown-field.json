@@ -1,0 +1,14 @@
+{
+  "case": "contract--merge-toml-unknown-field",
+  "operations": [
+    {
+      "op": "merge_toml",
+      "path": "${project}/a.toml",
+      "table": "t",
+      "value": 1,
+      "strategy": "set",
+      "create": true
+    }
+  ],
+  "refused_by": "contract"
+}

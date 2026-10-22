@@ -1,0 +1,9 @@
+{
+  "case": "valid--git-exclude",
+  "operations": [
+    {
+      "op": "git_exclude",
+      "pattern": ".claude/rules/ror-*"
+    }
+  ]
+}

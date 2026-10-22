@@ -1,0 +1,13 @@
+{
+  "case": "valid--merge-json",
+  "operations": [
+    {
+      "op": "merge_json",
+      "path": "${project}/.claude/settings.json",
+      "pointer": "/permissions/deny",
+      "value": ["Bash(rm -rf:*)"],
+      "strategy": "append_unique",
+      "owner": "_runonroad"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "case": "contract--ensure-dir-path-not-a-string",
+  "operations": [
+    {
+      "op": "ensure_dir",
+      "path": ["${project}/a"]
+    }
+  ],
+  "refused_by": "contract"
+}

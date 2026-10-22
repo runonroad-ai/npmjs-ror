@@ -1,0 +1,10 @@
+{
+  "case": "contract--write-file-missing-content",
+  "operations": [
+    {
+      "op": "write_file",
+      "path": "${project}/.claude/rules/ror-hello--context.md"
+    }
+  ],
+  "refused_by": "contract"
+}

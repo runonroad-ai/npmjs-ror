@@ -1,0 +1,9 @@
+{
+  "case": "valid--run-tool-command",
+  "operations": [
+    {
+      "op": "run_tool_command",
+      "argv": ["claude", "mcp", "add", "runonroad", "--", "ror", "mcp"]
+    }
+  ]
+}

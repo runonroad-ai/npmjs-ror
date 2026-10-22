@@ -1,0 +1,10 @@
+{
+  "case": "contract--unknown-operation",
+  "operations": [
+    {
+      "op": "delete_everything",
+      "path": "${project}/x"
+    }
+  ],
+  "refused_by": "contract"
+}

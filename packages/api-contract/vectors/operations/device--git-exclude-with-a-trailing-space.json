@@ -1,0 +1,10 @@
+{
+  "case": "device--git-exclude-with-a-trailing-space",
+  "operations": [
+    {
+      "op": "git_exclude",
+      "pattern": "a "
+    }
+  ],
+  "refused_by": "device"
+}

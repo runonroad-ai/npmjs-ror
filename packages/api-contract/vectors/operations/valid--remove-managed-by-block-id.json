@@ -1,0 +1,10 @@
+{
+  "case": "valid--remove-managed-by-block-id",
+  "operations": [
+    {
+      "op": "remove_managed",
+      "path": "${project}/AGENTS.md",
+      "block_id": "ror-old"
+    }
+  ]
+}

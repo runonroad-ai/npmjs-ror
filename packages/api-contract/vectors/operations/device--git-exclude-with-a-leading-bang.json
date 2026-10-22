@@ -1,0 +1,10 @@
+{
+  "case": "device--git-exclude-with-a-leading-bang",
+  "operations": [
+    {
+      "op": "git_exclude",
+      "pattern": "!keep.md"
+    }
+  ],
+  "refused_by": "device"
+}

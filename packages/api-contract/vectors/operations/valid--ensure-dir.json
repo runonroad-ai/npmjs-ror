@@ -1,0 +1,9 @@
+{
+  "case": "valid--ensure-dir",
+  "operations": [
+    {
+      "op": "ensure_dir",
+      "path": "${project}/.claude/skills/ror-hello"
+    }
+  ]
+}

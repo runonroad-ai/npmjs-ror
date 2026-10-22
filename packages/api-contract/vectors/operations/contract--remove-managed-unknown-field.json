@@ -1,0 +1,11 @@
+{
+  "case": "contract--remove-managed-unknown-field",
+  "operations": [
+    {
+      "op": "remove_managed",
+      "path": "${project}/a",
+      "force": true
+    }
+  ],
+  "refused_by": "contract"
+}

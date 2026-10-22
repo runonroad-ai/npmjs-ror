@@ -1,0 +1,13 @@
+{
+  "case": "contract--managed-block-unknown-comment-style",
+  "operations": [
+    {
+      "op": "managed_block",
+      "path": "${project}/AGENTS.md",
+      "block_id": "b",
+      "content": "c",
+      "comment_style": "xml"
+    }
+  ],
+  "refused_by": "contract"
+}

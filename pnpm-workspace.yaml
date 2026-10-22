@@ -1,0 +1,5 @@
+packages:
+  - apps/cli
+  - packages/*
+allowBuilds:
+  esbuild: false

@@ -1,0 +1,9 @@
+{
+  "case": "contract--ensure-dir-missing-path",
+  "operations": [
+    {
+      "op": "ensure_dir"
+    }
+  ],
+  "refused_by": "contract"
+}

@@ -1,0 +1,10 @@
+{
+  "case": "device--git-exclude-with-a-delete-character",
+  "operations": [
+    {
+      "op": "git_exclude",
+      "pattern": "a\u007fb"
+    }
+  ],
+  "refused_by": "device"
+}

@@ -1,0 +1,10 @@
+{
+  "case": "device--git-exclude-with-a-control-character",
+  "operations": [
+    {
+      "op": "git_exclude",
+      "pattern": "a\u001bb"
+    }
+  ],
+  "refused_by": "device"
+}

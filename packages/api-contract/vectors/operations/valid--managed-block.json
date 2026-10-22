@@ -1,0 +1,12 @@
+{
+  "case": "valid--managed-block",
+  "operations": [
+    {
+      "op": "managed_block",
+      "path": "${project}/AGENTS.md",
+      "block_id": "ror-governance",
+      "content": "Follow the governance.\n",
+      "comment_style": "html"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "case": "device--same-path-written-twice-in-another-case",
+  "operations": [
+    {
+      "op": "write_file",
+      "path": "${project}/.claude/rules/ror-hello--context.md",
+      "content": "one"
+    },
+    {
+      "op": "write_file",
+      "path": "${project}/.claude/rules/ror-Hello--context.md",
+      "content": "two"
+    }
+  ],
+  "refused_by": "device"
+}

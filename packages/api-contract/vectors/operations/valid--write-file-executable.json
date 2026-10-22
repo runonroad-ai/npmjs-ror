@@ -1,0 +1,11 @@
+{
+  "case": "valid--write-file-executable",
+  "operations": [
+    {
+      "op": "write_file",
+      "path": "${project}/.claude/hooks/ror-check.sh",
+      "content": "#!/bin/sh\n# <!-- Managed by RunOnRoad — do not edit -->\nexit 0\n",
+      "executable": true
+    }
+  ]
+}

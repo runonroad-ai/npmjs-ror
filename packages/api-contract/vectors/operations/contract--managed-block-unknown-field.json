@@ -1,0 +1,14 @@
+{
+  "case": "contract--managed-block-unknown-field",
+  "operations": [
+    {
+      "op": "managed_block",
+      "path": "${project}/AGENTS.md",
+      "block_id": "b",
+      "content": "c",
+      "comment_style": "html",
+      "replace": true
+    }
+  ],
+  "refused_by": "contract"
+}

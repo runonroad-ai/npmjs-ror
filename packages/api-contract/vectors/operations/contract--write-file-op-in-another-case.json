@@ -1,0 +1,11 @@
+{
+  "case": "contract--write-file-op-in-another-case",
+  "operations": [
+    {
+      "OP": "write_file",
+      "path": "${project}/.claude/rules/ror-hello--context.md",
+      "content": "c"
+    }
+  ],
+  "refused_by": "contract"
+}

@@ -1,0 +1,10 @@
+{
+  "case": "device--git-exclude-with-a-leading-hash",
+  "operations": [
+    {
+      "op": "git_exclude",
+      "pattern": "# a comment"
+    }
+  ],
+  "refused_by": "device"
+}

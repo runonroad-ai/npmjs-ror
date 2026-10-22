@@ -1,0 +1,12 @@
+{
+  "case": "contract--managed-block-missing-block-id",
+  "operations": [
+    {
+      "op": "managed_block",
+      "path": "${project}/AGENTS.md",
+      "content": "c",
+      "comment_style": "html"
+    }
+  ],
+  "refused_by": "contract"
+}

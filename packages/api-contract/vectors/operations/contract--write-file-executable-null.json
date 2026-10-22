@@ -1,0 +1,12 @@
+{
+  "case": "contract--write-file-executable-null",
+  "operations": [
+    {
+      "op": "write_file",
+      "path": "${project}/.claude/rules/ror-hello--context.md",
+      "content": "c",
+      "executable": null
+    }
+  ],
+  "refused_by": "contract"
+}

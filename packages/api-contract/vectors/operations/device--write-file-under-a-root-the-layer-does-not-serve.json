@@ -1,0 +1,11 @@
+{
+  "case": "device--write-file-under-a-root-the-layer-does-not-serve",
+  "operations": [
+    {
+      "op": "write_file",
+      "path": "${home}/.claude/CLAUDE.md",
+      "content": "c"
+    }
+  ],
+  "refused_by": "device"
+}

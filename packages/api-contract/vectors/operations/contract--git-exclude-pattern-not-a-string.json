@@ -1,0 +1,10 @@
+{
+  "case": "contract--git-exclude-pattern-not-a-string",
+  "operations": [
+    {
+      "op": "git_exclude",
+      "pattern": null
+    }
+  ],
+  "refused_by": "contract"
+}

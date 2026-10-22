@@ -1,0 +1,10 @@
+{
+  "case": "contract--run-tool-command-argv-not-a-list",
+  "operations": [
+    {
+      "op": "run_tool_command",
+      "argv": "claude mcp add"
+    }
+  ],
+  "refused_by": "contract"
+}

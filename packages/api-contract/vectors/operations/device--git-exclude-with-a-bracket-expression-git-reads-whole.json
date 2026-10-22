@@ -1,0 +1,10 @@
+{
+  "case": "device--git-exclude-with-a-bracket-expression-git-reads-whole",
+  "operations": [
+    {
+      "op": "git_exclude",
+      "pattern": "[!]]*"
+    }
+  ],
+  "refused_by": "device"
+}

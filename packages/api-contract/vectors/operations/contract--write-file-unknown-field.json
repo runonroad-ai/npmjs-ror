@@ -1,0 +1,12 @@
+{
+  "case": "contract--write-file-unknown-field",
+  "operations": [
+    {
+      "op": "write_file",
+      "path": "${project}/.claude/rules/ror-hello--context.md",
+      "content": "c",
+      "mode": "0777"
+    }
+  ],
+  "refused_by": "contract"
+}

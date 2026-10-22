@@ -1,0 +1,10 @@
+{
+  "case": "device--ensure-dir-with-a-dot-segment",
+  "operations": [
+    {
+      "op": "ensure_dir",
+      "path": "${project}/.claude/./rules"
+    }
+  ],
+  "refused_by": "device"
+}

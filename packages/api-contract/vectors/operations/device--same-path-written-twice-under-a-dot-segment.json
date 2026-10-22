@@ -1,0 +1,16 @@
+{
+  "case": "device--same-path-written-twice-under-a-dot-segment",
+  "operations": [
+    {
+      "op": "write_file",
+      "path": "${project}/.claude/rules/ror-hello--context.md",
+      "content": "one"
+    },
+    {
+      "op": "write_file",
+      "path": "${project}/.claude/./rules/ror-hello--context.md",
+      "content": "two"
+    }
+  ],
+  "refused_by": "device"
+}

@@ -1,0 +1,11 @@
+{
+  "case": "contract--write-file-content-not-a-string",
+  "operations": [
+    {
+      "op": "write_file",
+      "path": "${project}/.claude/rules/ror-hello--context.md",
+      "content": 5
+    }
+  ],
+  "refused_by": "contract"
+}

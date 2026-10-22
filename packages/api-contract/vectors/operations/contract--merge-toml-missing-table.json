@@ -1,0 +1,12 @@
+{
+  "case": "contract--merge-toml-missing-table",
+  "operations": [
+    {
+      "op": "merge_toml",
+      "path": "${project}/a.toml",
+      "value": 1,
+      "strategy": "set"
+    }
+  ],
+  "refused_by": "contract"
+}

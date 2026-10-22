@@ -1,0 +1,10 @@
+{
+  "case": "valid--write-file",
+  "operations": [
+    {
+      "op": "write_file",
+      "path": "${project}/.claude/rules/ror-hello--context.md",
+      "content": "# Hello governance\n<!-- Managed by RunOnRoad — do not edit -->\n\n## Forbidden\n- Commit a secret.\n"
+    }
+  ]
+}

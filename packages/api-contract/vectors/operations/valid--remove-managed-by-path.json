@@ -1,0 +1,9 @@
+{
+  "case": "valid--remove-managed-by-path",
+  "operations": [
+    {
+      "op": "remove_managed",
+      "path": "${project}/.claude/rules/ror-old.md"
+    }
+  ]
+}

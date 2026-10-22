@@ -1,0 +1,15 @@
+{
+  "case": "valid--merge-toml",
+  "operations": [
+    {
+      "op": "merge_toml",
+      "path": "${project}/.codex/config.toml",
+      "table": "ror-mcp",
+      "value": {
+        "command": "ror",
+        "args": ["mcp"]
+      },
+      "strategy": "set"
+    }
+  ]
+}

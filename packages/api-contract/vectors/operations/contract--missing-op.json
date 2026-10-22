@@ -1,0 +1,10 @@
+{
+  "case": "contract--missing-op",
+  "operations": [
+    {
+      "path": "${project}/x",
+      "content": "c"
+    }
+  ],
+  "refused_by": "contract"
+}

@@ -1,0 +1,10 @@
+{
+  "case": "device--git-exclude-only-a-bracket-expression-and-wildcards",
+  "operations": [
+    {
+      "op": "git_exclude",
+      "pattern": "[!.]*"
+    }
+  ],
+  "refused_by": "device"
+}

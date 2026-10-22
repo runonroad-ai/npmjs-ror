@@ -1,0 +1,11 @@
+{
+  "case": "device--write-file-with-a-dot-segment",
+  "operations": [
+    {
+      "op": "write_file",
+      "path": "${project}/.claude/rules/./ror-hello--context.md",
+      "content": "one"
+    }
+  ],
+  "refused_by": "device"
+}

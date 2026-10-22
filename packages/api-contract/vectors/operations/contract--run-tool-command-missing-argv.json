@@ -1,0 +1,9 @@
+{
+  "case": "contract--run-tool-command-missing-argv",
+  "operations": [
+    {
+      "op": "run_tool_command"
+    }
+  ],
+  "refused_by": "contract"
+}

@@ -1,0 +1,14 @@
+{
+  "case": "contract--merge-json-unknown-strategy",
+  "operations": [
+    {
+      "op": "merge_json",
+      "path": "${project}/a.json",
+      "pointer": "/a",
+      "value": 1,
+      "strategy": "replace",
+      "owner": "o"
+    }
+  ],
+  "refused_by": "contract"
+}

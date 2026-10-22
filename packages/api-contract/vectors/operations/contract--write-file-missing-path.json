@@ -1,0 +1,10 @@
+{
+  "case": "contract--write-file-missing-path",
+  "operations": [
+    {
+      "op": "write_file",
+      "content": "c"
+    }
+  ],
+  "refused_by": "contract"
+}

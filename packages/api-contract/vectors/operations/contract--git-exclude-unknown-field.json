@@ -1,0 +1,11 @@
+{
+  "case": "contract--git-exclude-unknown-field",
+  "operations": [
+    {
+      "op": "git_exclude",
+      "pattern": "a",
+      "negate": false
+    }
+  ],
+  "refused_by": "contract"
+}

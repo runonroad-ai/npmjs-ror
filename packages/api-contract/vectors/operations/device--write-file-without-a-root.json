@@ -1,0 +1,11 @@
+{
+  "case": "device--write-file-without-a-root",
+  "operations": [
+    {
+      "op": "write_file",
+      "path": ".claude/rules/ror-x.md",
+      "content": "c"
+    }
+  ],
+  "refused_by": "device"
+}

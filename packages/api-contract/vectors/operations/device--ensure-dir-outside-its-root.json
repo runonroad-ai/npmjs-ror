@@ -1,0 +1,10 @@
+{
+  "case": "device--ensure-dir-outside-its-root",
+  "operations": [
+    {
+      "op": "ensure_dir",
+      "path": "${project}/a/../../outside"
+    }
+  ],
+  "refused_by": "device"
+}

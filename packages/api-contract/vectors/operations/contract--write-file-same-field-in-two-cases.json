@@ -1,0 +1,12 @@
+{
+  "case": "contract--write-file-same-field-in-two-cases",
+  "operations": [
+    {
+      "op": "write_file",
+      "path": "${project}/.claude/rules/ror-hello--context.md",
+      "Path": "${project}/other.md",
+      "content": "c"
+    }
+  ],
+  "refused_by": "contract"
+}

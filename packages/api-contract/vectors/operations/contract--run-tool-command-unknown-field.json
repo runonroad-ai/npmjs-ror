@@ -1,0 +1,11 @@
+{
+  "case": "contract--run-tool-command-unknown-field",
+  "operations": [
+    {
+      "op": "run_tool_command",
+      "argv": ["claude"],
+      "shell": true
+    }
+  ],
+  "refused_by": "contract"
+}

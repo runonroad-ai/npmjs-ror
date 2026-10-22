@@ -1,0 +1,10 @@
+{
+  "case": "device--git-exclude-empty",
+  "operations": [
+    {
+      "op": "git_exclude",
+      "pattern": ""
+    }
+  ],
+  "refused_by": "device"
+}

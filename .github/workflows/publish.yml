@@ -1,0 +1,107 @@
+# Runs in runonroad-ai/npmjs-ror, where release-ror.yml copies it as .github/workflows/publish.yml
+# (ADR-0089): a ror-v<version> tag tests the copy, packs @runonroad/ror, signs the tarball with
+# keyless cosign, attaches it to a release of this repository, which every install channel reads,
+# then publishes that same tarball to npm with provenance. npm comes last: it is the one step a
+# re-run cannot redo, so a failure anywhere before it leaves the version free. npm trusted publishing names
+# this file and refuses self-hosted runners, so the job runs on GitHub's.
+name: Publish ror
+
+on:
+  push:
+    tags: ['ror-v*']
+
+# A version publishes once: a second run of the same tag waits for the first, never races it.
+concurrency:
+  group: publish-ror-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write # the release of this repository
+      id-token: write # npm trusted publishing and provenance, cosign keyless signing
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+      - name: Check the tag names the package version
+        run: |
+          version=$(node -p "require('./apps/cli/package.json').version")
+          if [ "$GITHUB_REF_NAME" != "ror-v$version" ]; then
+            echo "::error::tag $GITHUB_REF_NAME does not match @runonroad/ror $version"
+            exit 1
+          fi
+          echo "VERSION=$version" >> "$GITHUB_ENV"
+      # npm trusted publishing needs npm 11.5.1 or later; the one Node bundles may be older.
+      - name: Use npm 11.6.2
+        run: |
+          npm install --global npm@11.6.2
+          npm --version
+      - name: Stop if this version is already on npm
+        run: |
+          if npm view "@runonroad/ror@$VERSION" version >/dev/null 2>&1; then
+            echo "::error::@runonroad/ror $VERSION is already published: tag a new version"
+            exit 1
+          fi
+      - name: Enable pnpm from packageManager
+        run: |
+          corepack enable
+          corepack install
+      # No dependency cache in a release build: what is published comes from the lockfile that
+      # release-ror.yml wrote when it built this copy.
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @runonroad/ror test
+      - name: Pack the tarball and its fingerprint
+        working-directory: apps/cli
+        run: |
+          mkdir -p "$RUNNER_TEMP/release"
+          pnpm pack --pack-destination "$RUNNER_TEMP/release"
+          cd "$RUNNER_TEMP/release"
+          tgz="runonroad-ror-$VERSION.tgz"
+          sha256sum "$tgz" > "$tgz.sha256"
+          # What `ror version` prints: the sha256 of the entry file a workstation installs.
+          tar -xzOf "$tgz" package/dist/index.js | sha256sum | cut -d' ' -f1 > "ror-$VERSION.fingerprint"
+      - uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+      - name: Sign the tarball
+        working-directory: ${{ runner.temp }}/release
+        run: |
+          tgz="runonroad-ror-$VERSION.tgz"
+          cosign sign-blob --yes --bundle "$tgz.sigstore.json" "$tgz"
+          # cosign 3 writes a bundle only; the signature and the certificate also ship on their own.
+          jq -er '.messageSignature.signature' "$tgz.sigstore.json" > "$tgz.sig"
+          {
+            echo '-----BEGIN CERTIFICATE-----'
+            jq -er '.verificationMaterial.certificate.rawBytes' "$tgz.sigstore.json" | fold -w 64
+            echo '-----END CERTIFICATE-----'
+          } > "$tgz.pem"
+          cosign verify-blob --bundle "$tgz.sigstore.json" \
+            --certificate-identity "https://github.com/$GITHUB_WORKFLOW_REF" \
+            --certificate-oidc-issuer https://token.actions.githubusercontent.com "$tgz"
+      - name: Release on this repository
+        working-directory: ${{ runner.temp }}/release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # A re-run replaces the release of a version npm does not hold yet (checked above).
+          gh release delete "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --yes 2>/dev/null || true
+          prerelease=()
+          case "$VERSION" in *-*) prerelease=(--prerelease) ;; esac
+          gh release create "$GITHUB_REF_NAME" "${prerelease[@]}" \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "ror $VERSION" \
+            --notes "fingerprint $(cat "ror-$VERSION.fingerprint")" \
+            ./*
+      - name: Publish to npm
+        working-directory: ${{ runner.temp }}/release
+        run: |
+          tag=latest
+          case "$VERSION" in *-*) tag=next ;; esac
+          npm publish "runonroad-ror-$VERSION.tgz" --provenance --access public --tag "$tag"

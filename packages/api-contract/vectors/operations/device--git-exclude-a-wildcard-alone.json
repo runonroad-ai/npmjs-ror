@@ -1,0 +1,10 @@
+{
+  "case": "device--git-exclude-a-wildcard-alone",
+  "operations": [
+    {
+      "op": "git_exclude",
+      "pattern": "*"
+    }
+  ],
+  "refused_by": "device"
+}
