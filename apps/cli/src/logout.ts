@@ -1,9 +1,8 @@
 // `ror logout [--server <url>]` (SPEC-007 §2): revoke this device on the server, then forget its
 // token. The revocation is tried, never required: the keychain entry goes in every case.
 import { apiClient } from './api.js';
-import { flagValue } from './flags.js';
 import type { LoginContext } from './login.js';
-import { readConfig } from './state.js';
+import { readConfig, resolveServer } from './state.js';
 import { RorError, serverOrigin, tokenStore, type TokenStore } from './token-store.js';
 
 /** Why the server did not revoke the device, or `undefined` once it did. */
@@ -28,11 +27,7 @@ async function revoke(
 /** Exit code 0 (SPEC-007 §2), whether or not the server could revoke the device. */
 export async function logout(args: readonly string[], context: LoginContext): Promise<number> {
   const config = readConfig(context.home);
-  const server = flagValue(args, '--server') ?? config.server;
-  if (server === undefined) {
-    context.out('Nothing is signed in: no server configured.');
-    return 0;
-  }
+  const server = resolveServer(args, context.home);
   const origin = serverOrigin(server);
   // The keychain's device token only: an agent's RUNONROAD_TOKEN is no device of this machine.
   const { keychain: backend, fetch } = context;

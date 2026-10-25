@@ -5,15 +5,21 @@
  * command silently do something other than what was asked, and a script still passing an old
  * name must stop rather than change meaning.
  */
-import { RorError } from './token-store.js';
+import { RorError } from './ror-error.js';
 
 /** Accepted by every verb. */
 export const GLOBAL_FLAGS: readonly string[] = [];
 
 /** The flags of one verb, on top of the global ones. A verb missing here takes only those. */
 export const VERB_FLAGS: Readonly<Record<string, readonly string[]>> = {
+  derogation: ['--server', '--reason', '--dry-run', '--status', '--text'],
   login: ['--server', '--org', '--non-interactive'],
   logout: ['--server'],
+  sync: ['--all', '--project-dir', '--target', '--from-hook', '--no-library'],
+  mcp: ['--server'],
+  status: ['--json', '--project-dir', '--target'],
+  install: ['--managed', '--timer'],
+  uninstall: ['--project-dir', '--target'],
 };
 
 /** Everything a verb accepts: its own flags plus the global ones. */

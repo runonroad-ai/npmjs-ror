@@ -1,0 +1,518 @@
+{
+  "$id": "https://runonroad.dev/schema/rhs-v1.subset.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "components": {
+      "items": {},
+      "type": "array"
+    },
+    "context": {
+      "additionalProperties": false,
+      "properties": {
+        "allowed": {
+          "default": "",
+          "maxLength": 10000,
+          "type": "string"
+        },
+        "ask_first": {
+          "default": "",
+          "maxLength": 10000,
+          "type": "string"
+        },
+        "forbidden": {
+          "default": "",
+          "maxLength": 10000,
+          "type": "string"
+        },
+        "preamble": {
+          "default": "",
+          "type": "string"
+        },
+        "preferred": {
+          "default": "",
+          "maxLength": 10000,
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "governance": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "domain": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "name": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "purpose": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "slug": {
+          "pattern": "^[a-z0-9-]{2,48}$",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "slug",
+        "name",
+        "domain",
+        "category"
+      ],
+      "type": "object"
+    },
+    "rhs": {
+      "const": 1,
+      "type": "number"
+    },
+    "rules": {
+      "items": {
+        "oneOf": [
+          {
+            "additionalProperties": false,
+            "properties": {
+              "access": {
+                "enum": [
+                  "read",
+                  "write",
+                  "any"
+                ],
+                "type": "string"
+              },
+              "decision": {
+                "enum": [
+                  "forbid",
+                  "ask"
+                ],
+                "type": "string"
+              },
+              "glob": {
+                "maxLength": 300,
+                "minLength": 1,
+                "pattern": "^[A-Za-z0-9_~./*?+@-]+$",
+                "type": "string"
+              },
+              "id": {
+                "pattern": "^[a-z0-9][a-z0-9-]{1,62}$",
+                "type": "string"
+              },
+              "kind": {
+                "const": "path",
+                "type": "string"
+              },
+              "reason": {
+                "maxLength": 300,
+                "minLength": 1,
+                "type": "string"
+              },
+              "required": {
+                "default": true,
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "decision",
+              "reason",
+              "kind",
+              "access",
+              "glob"
+            ],
+            "type": "object"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "argv_prefix": {
+                "default": [],
+                "items": {
+                  "maxLength": 64,
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "maxItems": 4,
+                "type": "array"
+              },
+              "decision": {
+                "enum": [
+                  "forbid",
+                  "ask"
+                ],
+                "type": "string"
+              },
+              "executable": {
+                "pattern": "^[A-Za-z0-9._+-]{1,64}$",
+                "type": "string"
+              },
+              "flags_any": {
+                "default": [],
+                "items": {
+                  "pattern": "^-{1,2}[A-Za-z0-9][A-Za-z0-9-]*$",
+                  "type": "string"
+                },
+                "maxItems": 8,
+                "type": "array"
+              },
+              "id": {
+                "pattern": "^[a-z0-9][a-z0-9-]{1,62}$",
+                "type": "string"
+              },
+              "kind": {
+                "const": "command",
+                "type": "string"
+              },
+              "reason": {
+                "maxLength": 300,
+                "minLength": 1,
+                "type": "string"
+              },
+              "required": {
+                "default": true,
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "decision",
+              "reason",
+              "kind",
+              "executable"
+            ],
+            "type": "object"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "alternatives": {
+                "default": [],
+                "items": {
+                  "maxLength": 300,
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "maxItems": 8,
+                "type": "array"
+              },
+              "constraint": {
+                "oneOf": [
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "binding_window": {
+                        "default": 6,
+                        "maximum": 12,
+                        "minimum": 1,
+                        "type": "integer"
+                      },
+                      "currency": {
+                        "pattern": "^[A-Z]{3}$",
+                        "type": "string"
+                      },
+                      "kind": {
+                        "const": "number_bound",
+                        "type": "string"
+                      },
+                      "limit": {
+                        "pattern": "^\\d+(\\.\\d+)?$",
+                        "type": "string"
+                      },
+                      "operator": {
+                        "enum": [
+                          "lt",
+                          "lte",
+                          "gt",
+                          "gte"
+                        ],
+                        "type": "string"
+                      },
+                      "unit": {
+                        "enum": [
+                          "percent",
+                          "amount",
+                          "count"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "operator",
+                      "limit",
+                      "unit"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "context_exceptions": {
+                        "default": [],
+                        "items": {
+                          "maxLength": 80,
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "maxItems": 32,
+                        "type": "array"
+                      },
+                      "kind": {
+                        "const": "forbidden_terms",
+                        "type": "string"
+                      },
+                      "terms": {
+                        "items": {
+                          "maxLength": 80,
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "maxItems": 32,
+                        "minItems": 1,
+                        "type": "array"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "terms"
+                    ],
+                    "type": "object"
+                  }
+                ]
+              },
+              "decision": {
+                "enum": [
+                  "forbid",
+                  "ask"
+                ],
+                "type": "string"
+              },
+              "fiche": {
+                "additionalProperties": false,
+                "properties": {
+                  "approval": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "at": {
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                        "type": "string"
+                      },
+                      "by": {
+                        "maxLength": 100,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "digest": {
+                        "pattern": "^sha256:[0-9a-f]{64}$",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "by",
+                      "at",
+                      "digest"
+                    ],
+                    "type": "object"
+                  },
+                  "examples": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "ambiguous": {
+                        "default": [],
+                        "items": {
+                          "maxLength": 300,
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "maxItems": 12,
+                        "type": "array"
+                      },
+                      "compliant": {
+                        "default": [],
+                        "items": {
+                          "maxLength": 300,
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "maxItems": 12,
+                        "type": "array"
+                      },
+                      "other_subject": {
+                        "default": [],
+                        "items": {
+                          "maxLength": 300,
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "maxItems": 12,
+                        "type": "array"
+                      },
+                      "violation": {
+                        "default": [],
+                        "items": {
+                          "maxLength": 300,
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "maxItems": 12,
+                        "type": "array"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "interpretation": {
+                    "maxLength": 2000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "matcher_version": {
+                    "maxLength": 60,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "origin": {
+                    "enum": [
+                      "form",
+                      "assisted"
+                    ],
+                    "type": "string"
+                  },
+                  "schema_version": {
+                    "const": 1,
+                    "type": "number"
+                  },
+                  "tests": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "expected": {
+                          "enum": [
+                            "violation",
+                            "ambiguous",
+                            "none"
+                          ],
+                          "type": "string"
+                        },
+                        "text": {
+                          "maxLength": 500,
+                          "minLength": 1,
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "text",
+                        "expected"
+                      ],
+                      "type": "object"
+                    },
+                    "maxItems": 60,
+                    "minItems": 1,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "schema_version",
+                  "matcher_version",
+                  "interpretation",
+                  "examples",
+                  "tests",
+                  "origin"
+                ],
+                "type": "object"
+              },
+              "id": {
+                "pattern": "^[a-z0-9][a-z0-9-]{1,62}$",
+                "type": "string"
+              },
+              "kind": {
+                "const": "content",
+                "type": "string"
+              },
+              "mode": {
+                "default": "block",
+                "enum": [
+                  "block",
+                  "review"
+                ],
+                "type": "string"
+              },
+              "reason": {
+                "maxLength": 300,
+                "minLength": 1,
+                "type": "string"
+              },
+              "required": {
+                "default": true,
+                "type": "boolean"
+              },
+              "scopes": {
+                "items": {
+                  "enum": [
+                    "prompt",
+                    "file_write",
+                    "answer"
+                  ],
+                  "type": "string"
+                },
+                "maxItems": 3,
+                "minItems": 1,
+                "type": "array"
+              },
+              "subject_aliases": {
+                "default": [],
+                "items": {
+                  "maxLength": 80,
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "maxItems": 32,
+                "type": "array"
+              },
+              "text": {
+                "maxLength": 2000,
+                "minLength": 1,
+                "type": "string"
+              },
+              "topic": {
+                "maxLength": 80,
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "decision",
+              "reason",
+              "kind",
+              "topic",
+              "text",
+              "scopes",
+              "constraint"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "maxItems": 200,
+      "type": "array"
+    }
+  },
+  "required": [
+    "rhs",
+    "governance",
+    "context"
+  ],
+  "title": "RunOnRoad Harness Spec v1 — preamble and four blocks subset",
+  "type": "object"
+}

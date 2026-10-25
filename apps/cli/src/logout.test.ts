@@ -1,11 +1,11 @@
-import { mkdtempSync, rmSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { run } from './cli.js';
-import { writeLogin } from './state.js';
+import { DEFAULT_SERVER, writeLogin } from './state.js';
 
 const SERVER = 'https://ror.example';
 const TOKEN = `rord_${'t'.repeat(43)}`;
@@ -109,12 +109,38 @@ describe('ror logout', () => {
     expect(sent).toEqual([]);
   });
 
-  it('says nothing is signed in, and exits 0, when no server was ever configured', async () => {
+  it('falls back to the build-time origin when no server was ever configured', async () => {
     rmSync(join(home, '.runonroad'), { recursive: true });
     const { code, out } = await logout(() => new Response(null, { status: 204 }));
 
     expect(code).toBe(0);
-    expect(out).toBe('Nothing is signed in: no server configured.');
+    expect(out).toBe(`Nothing is signed in to ${DEFAULT_SERVER}.`);
     expect(sent).toEqual([]);
+  });
+
+  it('leaves config.yaml unchanged when --server overrides it', async () => {
+    const path = join(home, '.runonroad', 'config.yaml');
+    const before = readFileSync(path, 'utf8');
+    const { out } = await logout(
+      () => new Response(null, { status: 204 }),
+      '--server',
+      'https://other.example',
+    );
+
+    expect(out).toBe('Nothing is signed in to https://other.example.');
+    expect(readFileSync(path, 'utf8')).toBe(before);
+  });
+
+  it.each([
+    ['does not parse', 'server: [unclosed'],
+    ['is not a mapping', '- https://ror.example'],
+  ])('exits with ROR-E119 naming a config.yaml that %s', async (_, content) => {
+    const path = join(home, '.runonroad', 'config.yaml');
+    writeFileSync(path, content);
+    const { code, err } = await logout(() => new Response(null, { status: 204 }));
+
+    expect(code).toBe(1);
+    expect(err).toMatch(/^ROR-E119 /u);
+    expect(err).toContain(path);
   });
 });

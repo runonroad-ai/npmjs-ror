@@ -1,6 +1,6 @@
 {
   "name": "@runonroad/ror",
-  "version": "0.0.1-rc.1",
+  "version": "0.0.1-rc.3",
   "description": "ror, the RunOnRoad client for a workstation.",
   "license": "Apache-2.0",
   "repository": {
@@ -11,6 +11,7 @@
   "type": "module",
   "files": [
     "dist/index.js",
+    "dist/hook-main.js",
     "THIRD_PARTY_NOTICES",
     "LICENSE"
   ],
@@ -21,7 +22,7 @@
     "node": ">=24"
   },
   "scripts": {
-    "build": "esbuild src/index.ts --bundle --platform=node --format=esm --target=node24 --external:@napi-rs/keyring \"--banner:js=import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);\" --metafile=dist/meta.json --outfile=dist/index.js",
+    "build": "esbuild src/index.ts --bundle --platform=node --format=esm --target=node24 --external:@napi-rs/keyring \"--banner:js=import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);\" --metafile=dist/meta.json --outfile=dist/index.js && esbuild src/hook-main.ts --bundle --platform=node --format=esm --target=node24 --external:@napi-rs/keyring \"--banner:js=import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);\" --alias:yaml=./src/hook-yaml-stub.ts --metafile=dist/meta-hook.json --outfile=dist/hook-main.js",
     "prepack": "pnpm build",
     "lint": "eslint .",
     "typecheck": "tsc -p tsconfig.json --noEmit",
@@ -29,6 +30,13 @@
   },
   "devDependencies": {
     "@runonroad/api-contract": "workspace:*",
+    "@runonroad/claude-code": "workspace:*",
+    "@runonroad/codex": "workspace:*",
+    "@runonroad/config": "workspace:*",
+    "@runonroad/content-rules": "workspace:*",
+    "@runonroad/cursor": "workspace:*",
+    "@runonroad/harness-spec": "workspace:*",
+    "@runonroad/skills": "workspace:*",
     "@runonroad/tsconfig": "workspace:*",
     "esbuild": "0.28.2",
     "yaml": "2.9.1"

@@ -179,6 +179,27 @@ importers:
       '@runonroad/api-contract':
         specifier: workspace:*
         version: link:../../packages/api-contract
+      '@runonroad/claude-code':
+        specifier: workspace:*
+        version: link:../../packages/adapters/claude-code
+      '@runonroad/codex':
+        specifier: workspace:*
+        version: link:../../packages/adapters/codex
+      '@runonroad/config':
+        specifier: workspace:*
+        version: link:../../packages/config
+      '@runonroad/content-rules':
+        specifier: workspace:*
+        version: link:../../packages/content-rules
+      '@runonroad/cursor':
+        specifier: workspace:*
+        version: link:../../packages/adapters/cursor
+      '@runonroad/harness-spec':
+        specifier: workspace:*
+        version: link:../../packages/harness-spec
+      '@runonroad/skills':
+        specifier: workspace:*
+        version: link:../../packages/skills
       '@runonroad/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
@@ -189,6 +210,42 @@ importers:
         specifier: 2.9.1
         version: 2.9.1
 
+  packages/adapters/claude-code:
+    dependencies:
+      '@runonroad/harness-spec':
+        specifier: workspace:*
+        version: link:../../harness-spec
+    devDependencies:
+      '@runonroad/tsconfig':
+        specifier: workspace:*
+        version: link:../../tsconfig
+
+  packages/adapters/codex:
+    dependencies:
+      '@runonroad/claude-code':
+        specifier: workspace:*
+        version: link:../claude-code
+      '@runonroad/harness-spec':
+        specifier: workspace:*
+        version: link:../../harness-spec
+    devDependencies:
+      '@runonroad/tsconfig':
+        specifier: workspace:*
+        version: link:../../tsconfig
+
+  packages/adapters/cursor:
+    dependencies:
+      '@runonroad/claude-code':
+        specifier: workspace:*
+        version: link:../claude-code
+      '@runonroad/harness-spec':
+        specifier: workspace:*
+        version: link:../../harness-spec
+    devDependencies:
+      '@runonroad/tsconfig':
+        specifier: workspace:*
+        version: link:../../tsconfig
+
   packages/api-contract:
     dependencies:
       openapi-fetch:
@@ -197,6 +254,36 @@ importers:
       zod:
         specifier: 4.6.5
         version: 4.6.5
+
+  packages/config: {}
+
+  packages/content-rules:
+    devDependencies:
+      '@runonroad/harness-spec':
+        specifier: workspace:*
+        version: link:../harness-spec
+      '@runonroad/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+
+  packages/harness-spec:
+    dependencies:
+      yaml:
+        specifier: 2.9.1
+        version: 2.9.1
+      zod:
+        specifier: 4.6.5
+        version: 4.6.5
+    devDependencies:
+      '@runonroad/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+
+  packages/skills:
+    devDependencies:
+      '@runonroad/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
 
   packages/tsconfig: {}
 

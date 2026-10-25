@@ -1,5 +1,6 @@
 packages:
   - apps/cli
   - packages/*
+  - packages/adapters/*
 allowBuilds:
   esbuild: false

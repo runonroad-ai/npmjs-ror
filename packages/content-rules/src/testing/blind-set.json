@@ -1,0 +1,902 @@
+[
+  {
+    "rule": "R1",
+    "text": "Bonjour, la remise est de 6 % sur ce devis.",
+    "expected": "violation",
+    "why": "Explicit discount exceeds 5%."
+  },
+  {
+    "rule": "R1",
+    "text": "Approved discount: 5%.",
+    "expected": "none",
+    "why": "The bound includes 5%."
+  },
+  {
+    "rule": "R1",
+    "text": "Réduction : 5,01 %.",
+    "expected": "violation",
+    "why": "Decimal comma clearly exceeds 5%."
+  },
+  {
+    "rule": "R1",
+    "text": "discount = 4.99%",
+    "expected": "none",
+    "why": "Explicit value respects the bound."
+  },
+  {
+    "rule": "R1",
+    "text": "La productivité augmente de 10 % ; aucune remise n'est indiquée.",
+    "expected": "none",
+    "why": "The percentage describes productivity."
+  },
+  {
+    "rule": "R1",
+    "text": "Remise : jusqu'à 10 %.",
+    "expected": "ambiguous",
+    "why": "A ceiling does not state an actual discount."
+  },
+  {
+    "rule": "R1",
+    "text": "Si on offrait une remise de 10 %, signeriez-vous ?",
+    "expected": "ambiguous",
+    "why": "The discount is hypothetical."
+  },
+  {
+    "rule": "R1",
+    "text": "Nous n'accordons pas de rabais de 8 %.",
+    "expected": "ambiguous",
+    "why": "The offending value is negated."
+  },
+  {
+    "rule": "R1",
+    "text": "Le client a écrit « discount: 12% » dans son message.",
+    "expected": "ambiguous",
+    "why": "The value appears in quoted speech."
+  },
+  {
+    "rule": "R1",
+    "text": "Ristourne : six pour cent.",
+    "expected": "ambiguous",
+    "why": "The number is spelled out."
+  },
+  {
+    "rule": "R1",
+    "text": "| Élément | Taux |\n| Remise | 7 % |\n| TVA | 20 % |",
+    "expected": "violation",
+    "why": "The table explicitly binds 7% to the discount."
+  },
+  {
+    "rule": "R1",
+    "text": "{\"discount\":\"6.5%\",\"growth\":\"2%\"}",
+    "expected": "violation",
+    "why": "The JSON field explicitly assigns the discount."
+  },
+  {
+    "rule": "R1",
+    "text": "remise: 3 %\nmarge: 28 %",
+    "expected": "none",
+    "why": "The discount is compliant; margin is separate."
+  },
+  {
+    "rule": "R1",
+    "text": "La remise satisfait le client ; le taux de 10 % reste à discuter.",
+    "expected": "ambiguous",
+    "why": "The percentage has no explicit subject binding."
+  },
+  {
+    "rule": "R1",
+    "text": "Discount: 3–8%.",
+    "expected": "ambiguous",
+    "why": "A range does not select an actual value."
+  },
+  {
+    "rule": "R1",
+    "text": "Réduction : +8 %.",
+    "expected": "ambiguous",
+    "why": "The signed value requires interpretation."
+  },
+  {
+    "rule": "R1",
+    "text": "Remise : 1,000 %.",
+    "expected": "ambiguous",
+    "why": "Comma may indicate decimals or thousands."
+  },
+  {
+    "rule": "R1",
+    "text": "Remise : 4 %. La croissance attendue est de 15 %.",
+    "expected": "none",
+    "why": "Only the compliant percentage belongs to the discount."
+  },
+  {
+    "rule": "R1",
+    "text": "#sales Léa: discount = 7%; margin = 30%.",
+    "expected": "violation",
+    "why": "Separate explicit assignments identify the discount."
+  },
+  {
+    "rule": "R1",
+    "text": "Remise : à partir de 6 %.",
+    "expected": "ambiguous",
+    "why": "A lower-bound offer does not state an actual value."
+  },
+  {
+    "rule": "R1",
+    "text": "Discount approval ID: 20261018; probability of acceptance: 80%.",
+    "expected": "none",
+    "why": "Neither number is a discount percentage."
+  },
+  {
+    "rule": "R1",
+    "text": "Remise : 3 % + 3 % sur deux assiettes différentes.",
+    "expected": "ambiguous",
+    "why": "Determining one discount requires combining distinct bases."
+  },
+  {
+    "rule": "R2",
+    "text": "La marge est de 19 %.",
+    "expected": "violation",
+    "why": "Explicit margin falls below 20%."
+  },
+  {
+    "rule": "R2",
+    "text": "Margin rate: 20%.",
+    "expected": "none",
+    "why": "Equality satisfies the floor."
+  },
+  {
+    "rule": "R2",
+    "text": "Marge : 19,99 %.",
+    "expected": "violation",
+    "why": "Decimal comma clearly falls below the floor."
+  },
+  {
+    "rule": "R2",
+    "text": "margin: 20.01%",
+    "expected": "none",
+    "why": "The margin exceeds the floor."
+  },
+  {
+    "rule": "R2",
+    "text": "Marge : au moins 20 %.",
+    "expected": "ambiguous",
+    "why": "A stated floor is not an actual value."
+  },
+  {
+    "rule": "R2",
+    "text": "Margin < 20%.",
+    "expected": "ambiguous",
+    "why": "An inequality is not an actual stated value."
+  },
+  {
+    "rule": "R2",
+    "text": "La marge n'est pas de 12 %.",
+    "expected": "ambiguous",
+    "why": "The low margin is negated."
+  },
+  {
+    "rule": "R2",
+    "text": "Le modèle contient l'exemple « marge : 15 % ».",
+    "expected": "ambiguous",
+    "why": "The value is quoted as an example."
+  },
+  {
+    "rule": "R2",
+    "text": "Margin: nineteen percent.",
+    "expected": "ambiguous",
+    "why": "The number is spelled out."
+  },
+  {
+    "rule": "R2",
+    "text": "| Metric | Value |\n| Margin | 18.5% |\n| Discount | 2% |",
+    "expected": "violation",
+    "why": "The table explicitly assigns a low margin."
+  },
+  {
+    "rule": "R2",
+    "text": "{\"margin rate\":\"18%\",\"completion\":\"90%\"}",
+    "expected": "violation",
+    "why": "The named JSON field binds the low margin."
+  },
+  {
+    "rule": "R2",
+    "text": "Marge : 25 %. Remise : 10 %.",
+    "expected": "none",
+    "why": "The low-floor rule concerns margin only."
+  },
+  {
+    "rule": "R2",
+    "text": "Margin review on 2026-10-18; interest rate: 12%.",
+    "expected": "none",
+    "why": "The percentage belongs to interest."
+  },
+  {
+    "rule": "R2",
+    "text": "Marge : entre 18 et 22 %.",
+    "expected": "ambiguous",
+    "why": "The range crosses the floor."
+  },
+  {
+    "rule": "R2",
+    "text": "Margin: -5%.",
+    "expected": "ambiguous",
+    "why": "The explicit sign makes the value uncertain under these semantics."
+  },
+  {
+    "rule": "R2",
+    "text": "Marge : 19,500 %.",
+    "expected": "ambiguous",
+    "why": "Decimal and thousands readings differ."
+  },
+  {
+    "rule": "R2",
+    "text": "La marge, après les ajustements encore non validés, 18 %.",
+    "expected": "ambiguous",
+    "why": "Intervening words leave the numerical relation implicit."
+  },
+  {
+    "rule": "R2",
+    "text": "If the margin were 10%, we would reject the deal.",
+    "expected": "ambiguous",
+    "why": "The low margin is hypothetical."
+  },
+  {
+    "rule": "R2",
+    "text": "Marge : 0 %.",
+    "expected": "violation",
+    "why": "An explicitly stated zero breaks the floor."
+  },
+  {
+    "rule": "R2",
+    "text": "Margin: 30%. VAT: 5%. Probability of renewal: 10%.",
+    "expected": "none",
+    "why": "Other low percentages do not describe margin."
+  },
+  {
+    "rule": "R3",
+    "text": "Note de frais : 501 EUR.",
+    "expected": "violation",
+    "why": "Explicit euro amount exceeds 500."
+  },
+  {
+    "rule": "R3",
+    "text": "Expense: EUR 500.",
+    "expected": "none",
+    "why": "Equality respects the cap."
+  },
+  {
+    "rule": "R3",
+    "text": "Dépense : 500,01 €.",
+    "expected": "violation",
+    "why": "Decimal comma clearly exceeds the cap."
+  },
+  {
+    "rule": "R3",
+    "text": "expense = €499.99",
+    "expected": "none",
+    "why": "Currency precedes a compliant amount."
+  },
+  {
+    "rule": "R3",
+    "text": "Expenses: EUR 1,250.00.",
+    "expected": "violation",
+    "why": "The separator pattern clearly denotes 1250 euros."
+  },
+  {
+    "rule": "R3",
+    "text": "Note de frais : 1 250,00 EUR.",
+    "expected": "violation",
+    "why": "French thousands grouping gives 1250 euros."
+  },
+  {
+    "rule": "R3",
+    "text": "Dépense : 1.250,00 €.",
+    "expected": "violation",
+    "why": "The paired separators clearly denote 1250 euros."
+  },
+  {
+    "rule": "R3",
+    "text": "Expense: EUR 1,000.",
+    "expected": "ambiguous",
+    "why": "A single comma permits conflicting numeric readings."
+  },
+  {
+    "rule": "R3",
+    "text": "Expense: 700 USD.",
+    "expected": "none",
+    "why": "The explicit currency is not EUR."
+  },
+  {
+    "rule": "R3",
+    "text": "Dépense : 700 ; devise à confirmer.",
+    "expected": "ambiguous",
+    "why": "The required currency is unresolved."
+  },
+  {
+    "rule": "R3",
+    "text": "Note de frais : jusqu'à 800 EUR.",
+    "expected": "ambiguous",
+    "why": "A ceiling does not state the actual expense."
+  },
+  {
+    "rule": "R3",
+    "text": "Expense: from EUR 600.",
+    "expected": "ambiguous",
+    "why": "A starting amount is not an actual expense."
+  },
+  {
+    "rule": "R3",
+    "text": "La dépense n'est pas de 900 EUR.",
+    "expected": "ambiguous",
+    "why": "The offending amount is negated."
+  },
+  {
+    "rule": "R3",
+    "text": "Finance quoted \"expense: EUR 850\" as a training example.",
+    "expected": "ambiguous",
+    "why": "The amount is quoted."
+  },
+  {
+    "rule": "R3",
+    "text": "Dépense : six cents euros.",
+    "expected": "ambiguous",
+    "why": "The number is spelled out."
+  },
+  {
+    "rule": "R3",
+    "text": "{\"expense\":{\"amount\":650,\"currency\":\"EUR\"}}",
+    "expected": "violation",
+    "why": "The structured fields explicitly identify subject and currency."
+  },
+  {
+    "rule": "R3",
+    "text": "| Poste | Montant |\n| Note de frais | 750 EUR |\n| Budget | 5000 EUR |",
+    "expected": "violation",
+    "why": "The expense row explicitly exceeds the cap."
+  },
+  {
+    "rule": "R3",
+    "text": "Expense ID: 750; invoice date: 2026-10-18; VAT: 20%.",
+    "expected": "none",
+    "why": "The numbers are identifiers, a date and VAT."
+  },
+  {
+    "rule": "R3",
+    "text": "Dépense : 300 EUR + 250 EUR, total non validé.",
+    "expected": "ambiguous",
+    "why": "A violation would require computing a provisional sum."
+  },
+  {
+    "rule": "R3",
+    "text": "Expenses: EUR 550 total for this claim.",
+    "expected": "violation",
+    "why": "An explicit cumulative amount exceeds the cap."
+  },
+  {
+    "rule": "R3",
+    "text": "Dépense : -700 EUR, remboursement fournisseur.",
+    "expected": "ambiguous",
+    "why": "The signed amount requires interpretation."
+  },
+  {
+    "rule": "R3",
+    "text": "La note de frais est jointe. Le budget du déplacement est de 900 EUR.",
+    "expected": "none",
+    "why": "The amount explicitly describes the budget."
+  },
+  {
+    "rule": "R4",
+    "text": "Page count: 21.",
+    "expected": "violation",
+    "why": "The explicit count exceeds 20."
+  },
+  {
+    "rule": "R4",
+    "text": "Longueur du document : 20 pages.",
+    "expected": "none",
+    "why": "Equality respects the limit."
+  },
+  {
+    "rule": "R4",
+    "text": "pages: 0",
+    "expected": "none",
+    "why": "Zero does not exceed the cap."
+  },
+  {
+    "rule": "R4",
+    "text": "{\"page count\":24,\"version\":\"2.0\"}",
+    "expected": "violation",
+    "why": "The count field explicitly exceeds the cap."
+  },
+  {
+    "rule": "R4",
+    "text": "| Champ | Valeur |\n| Longueur du document | 25 pages |",
+    "expected": "violation",
+    "why": "The table explicitly assigns the document length."
+  },
+  {
+    "rule": "R4",
+    "text": "Page count: up to 30.",
+    "expected": "ambiguous",
+    "why": "An upper limit does not state the actual count."
+  },
+  {
+    "rule": "R4",
+    "text": "Longueur du document : au plus 25 pages.",
+    "expected": "ambiguous",
+    "why": "A maximum is not an actual count."
+  },
+  {
+    "rule": "R4",
+    "text": "Page count: min 21.",
+    "expected": "ambiguous",
+    "why": "A minimum is not an actual count."
+  },
+  {
+    "rule": "R4",
+    "text": "Longueur du document : vingt et une pages.",
+    "expected": "ambiguous",
+    "why": "The count is spelled out."
+  },
+  {
+    "rule": "R4",
+    "text": "Page count: 18–24.",
+    "expected": "ambiguous",
+    "why": "The range crosses the cap."
+  },
+  {
+    "rule": "R4",
+    "text": "Le compte rendu ne fait pas 30 pages.",
+    "expected": "ambiguous",
+    "why": "The apparent excessive length is negated."
+  },
+  {
+    "rule": "R4",
+    "text": "The template says \"page count: 40\".",
+    "expected": "ambiguous",
+    "why": "The count is quoted."
+  },
+  {
+    "rule": "R4",
+    "text": "Voir page 42 du contrat fournisseur ; notre page count: 12.",
+    "expected": "none",
+    "why": "The other document's page number is not this count."
+  },
+  {
+    "rule": "R4",
+    "text": "Longueur du document : 20,5 pages.",
+    "expected": "violation",
+    "why": "The explicit fractional length exceeds 20."
+  },
+  {
+    "rule": "R4",
+    "text": "Page count: +21.",
+    "expected": "ambiguous",
+    "why": "The count has an explicit sign."
+  },
+  {
+    "rule": "R4",
+    "text": "Pages reviewed on 2026-10-18; completion: 90%.",
+    "expected": "none",
+    "why": "No numerical page count is assigned."
+  },
+  {
+    "rule": "R4",
+    "text": "Longueur du document : 12 pages + 10 pages d'annexes.",
+    "expected": "ambiguous",
+    "why": "The effective count requires deciding whether to aggregate annexes."
+  },
+  {
+    "rule": "R4",
+    "text": "Pages, après intégration éventuelle des annexes : 28.",
+    "expected": "ambiguous",
+    "why": "Intervening conditional wording prevents an explicit actual count."
+  },
+  {
+    "rule": "R5",
+    "text": "Délai de paiement : 61 jours.",
+    "expected": "violation",
+    "why": "Explicit count exceeds 60."
+  },
+  {
+    "rule": "R5",
+    "text": "Payment terms: 60 days.",
+    "expected": "none",
+    "why": "Equality respects the cap."
+  },
+  {
+    "rule": "R5",
+    "text": "payment term = 45 days",
+    "expected": "none",
+    "why": "The explicit duration is compliant."
+  },
+  {
+    "rule": "R5",
+    "text": "{\"payment terms\":90,\"unit\":\"days\"}",
+    "expected": "violation",
+    "why": "The JSON explicitly assigns a duration above 60."
+  },
+  {
+    "rule": "R5",
+    "text": "| Clause | Durée |\n| Délai de paiement | 75 jours |",
+    "expected": "violation",
+    "why": "The table explicitly binds the excessive duration."
+  },
+  {
+    "rule": "R5",
+    "text": "Payment terms: up to 90 days.",
+    "expected": "ambiguous",
+    "why": "The ceiling is not an actual duration."
+  },
+  {
+    "rule": "R5",
+    "text": "Délai de paiement : à partir de 75 jours.",
+    "expected": "ambiguous",
+    "why": "A starting duration is not an actual value."
+  },
+  {
+    "rule": "R5",
+    "text": "Délai de paiement : au moins 65 jours.",
+    "expected": "ambiguous",
+    "why": "A lower bound does not state an actual duration."
+  },
+  {
+    "rule": "R5",
+    "text": "Payment term: max 90 days.",
+    "expected": "ambiguous",
+    "why": "A maximum alone is insufficient."
+  },
+  {
+    "rule": "R5",
+    "text": "Payment terms: 30–90 days depending on approval.",
+    "expected": "ambiguous",
+    "why": "The actual duration remains unresolved."
+  },
+  {
+    "rule": "R5",
+    "text": "Le délai de paiement n'est pas de 90 jours.",
+    "expected": "ambiguous",
+    "why": "The excessive duration is negated."
+  },
+  {
+    "rule": "R5",
+    "text": "Legal flagged \"payment terms: 120 days\" in the draft.",
+    "expected": "ambiguous",
+    "why": "The duration appears in quoted material."
+  },
+  {
+    "rule": "R5",
+    "text": "Délai de paiement : soixante-cinq jours.",
+    "expected": "ambiguous",
+    "why": "The number is spelled out."
+  },
+  {
+    "rule": "R5",
+    "text": "Délai de paiement : 60,5 jours.",
+    "expected": "violation",
+    "why": "The explicit fractional duration exceeds 60."
+  },
+  {
+    "rule": "R5",
+    "text": "Payment terms discussed on 2026-09-30; call +33 1 60 90 12 34.",
+    "expected": "none",
+    "why": "Date and phone digits do not assign a duration."
+  },
+  {
+    "rule": "R5",
+    "text": "Payment terms: 2 months.",
+    "expected": "ambiguous",
+    "why": "Converting months into days requires additional assumptions."
+  },
+  {
+    "rule": "R5",
+    "text": "Délai de paiement : 30 jours. Retard de livraison : 90 jours.",
+    "expected": "none",
+    "why": "The excessive duration belongs to delivery delay."
+  },
+  {
+    "rule": "R5",
+    "text": "Payment terms: +75 days.",
+    "expected": "ambiguous",
+    "why": "The signed duration requires interpretation."
+  },
+  {
+    "rule": "R6",
+    "text": "We recommend Globex for this contract.",
+    "expected": "violation",
+    "why": "The forbidden term is used plainly."
+  },
+  {
+    "rule": "R6",
+    "text": "Le fournisseur retenu est Initech.",
+    "expected": "violation",
+    "why": "The forbidden term is used plainly."
+  },
+  {
+    "rule": "R6",
+    "text": "#procurement Maya: GLOBEX sent the proposal.",
+    "expected": "violation",
+    "why": "Capitalization does not change the named term."
+  },
+  {
+    "rule": "R6",
+    "text": "Partenaire : initech.",
+    "expected": "violation",
+    "why": "Lowercase still plainly names the forbidden term."
+  },
+  {
+    "rule": "R6",
+    "text": "Nous ne recommandons pas Globex.",
+    "expected": "ambiguous",
+    "why": "The term occurs under negation."
+  },
+  {
+    "rule": "R6",
+    "text": "The email says \"Initech\".",
+    "expected": "ambiguous",
+    "why": "The term is quoted."
+  },
+  {
+    "rule": "R6",
+    "text": "Comparatif interne : Globex versus notre offre.",
+    "expected": "ambiguous",
+    "why": "The stated exception context applies."
+  },
+  {
+    "rule": "R6",
+    "text": "Ce comparatif interne examine Initech.",
+    "expected": "ambiguous",
+    "why": "The term appears under the context exception."
+  },
+  {
+    "rule": "R6",
+    "text": "Le comparatif externe recommande Globex.",
+    "expected": "violation",
+    "why": "An external comparison is not the stated exception."
+  },
+  {
+    "rule": "R6",
+    "text": "Vendor code: Globexium-42.",
+    "expected": "none",
+    "why": "The term is embedded in a longer word."
+  },
+  {
+    "rule": "R6",
+    "text": "Le projet Initechnique démarre lundi.",
+    "expected": "none",
+    "why": "The longer word is not the forbidden term."
+  },
+  {
+    "rule": "R6",
+    "text": "Globex's proposal expires Friday.",
+    "expected": "violation",
+    "why": "The possessive plainly names Globex."
+  },
+  {
+    "rule": "R6",
+    "text": "- Globex\n- Fournisseur régional",
+    "expected": "violation",
+    "why": "A plain list entry uses the term."
+  },
+  {
+    "rule": "R6",
+    "text": "vendor: Initech\nstatus: selected",
+    "expected": "violation",
+    "why": "The YAML plainly names the vendor."
+  },
+  {
+    "rule": "R6",
+    "text": "{\"vendor\":\"Globex\"}",
+    "expected": "ambiguous",
+    "why": "The term is inside a quoted JSON string."
+  },
+  {
+    "rule": "R6",
+    "text": "Meeting note: exclude Initech from the shortlist.",
+    "expected": "ambiguous",
+    "why": "The term occurs in an explicit exclusion."
+  },
+  {
+    "rule": "R6",
+    "text": "Nous avons reçu le devis de Globe X.",
+    "expected": "none",
+    "why": "Neither forbidden term occurs."
+  },
+  {
+    "rule": "R6",
+    "text": "We selected Initech. The implementation starts Monday.",
+    "expected": "violation",
+    "why": "A separate ordinary sentence plainly names the vendor."
+  },
+  {
+    "rule": "R7",
+    "text": "Le résultat est garanti.",
+    "expected": "violation",
+    "why": "The exact term is used plainly."
+  },
+  {
+    "rule": "R7",
+    "text": "Delivery is guaranteed.",
+    "expected": "violation",
+    "why": "The exact English term is used plainly."
+  },
+  {
+    "rule": "R7",
+    "text": "100% guaranteed delivery by Friday.",
+    "expected": "violation",
+    "why": "The forbidden phrase is used plainly."
+  },
+  {
+    "rule": "R7",
+    "text": "Ce résultat n'est pas garanti.",
+    "expected": "ambiguous",
+    "why": "The term is negated."
+  },
+  {
+    "rule": "R7",
+    "text": "The draft contains \"guaranteed\" in its heading.",
+    "expected": "ambiguous",
+    "why": "The term is quoted."
+  },
+  {
+    "rule": "R7",
+    "text": "Objet : résultat GARANTI.",
+    "expected": "violation",
+    "why": "Uppercase preserves the exact word."
+  },
+  {
+    "rule": "R7",
+    "text": "La garantie dure douze mois.",
+    "expected": "none",
+    "why": "Garantie is a different, longer word."
+  },
+  {
+    "rule": "R7",
+    "text": "Les résultats sont garantis.",
+    "expected": "none",
+    "why": "The plural is not the listed exact term."
+  },
+  {
+    "rule": "R7",
+    "text": "La livraison est garantie.",
+    "expected": "none",
+    "why": "The inflected longer word is not listed."
+  },
+  {
+    "rule": "R7",
+    "text": "Our guarantees are documented.",
+    "expected": "none",
+    "why": "Guarantees is not guaranteed."
+  },
+  {
+    "rule": "R7",
+    "text": "The internal code is unguaranteed_batch.",
+    "expected": "none",
+    "why": "The term occurs only within a longer identifier."
+  },
+  {
+    "rule": "R7",
+    "text": "Si le résultat était garanti, le client signerait.",
+    "expected": "ambiguous",
+    "why": "The guarantee appears in a hypothetical condition."
+  },
+  {
+    "rule": "R7",
+    "text": "Marketing note: do not say guaranteed.",
+    "expected": "ambiguous",
+    "why": "The term is explicitly prohibited in context."
+  },
+  {
+    "rule": "R7",
+    "text": "| Claim | Status |\n| guaranteed | approved |",
+    "expected": "violation",
+    "why": "The table uses the unquoted term plainly."
+  },
+  {
+    "rule": "R7",
+    "text": "claim: guaranteed\nowner: marketing",
+    "expected": "violation",
+    "why": "The unquoted YAML value plainly uses the term."
+  },
+  {
+    "rule": "R7",
+    "text": "Availability is 100%. Renewal probability is 95%.",
+    "expected": "none",
+    "why": "Percentages alone do not contain a forbidden term."
+  },
+  {
+    "rule": "R8",
+    "text": "Le boîtier est noir.",
+    "expected": "violation",
+    "why": "The exact color term is used plainly."
+  },
+  {
+    "rule": "R8",
+    "text": "Finish: black.",
+    "expected": "violation",
+    "why": "The exact English term is used plainly."
+  },
+  {
+    "rule": "R8",
+    "text": "Couleur : NOIR.",
+    "expected": "violation",
+    "why": "Case does not change the term."
+  },
+  {
+    "rule": "R8",
+    "text": "Le boîtier n'est pas noir.",
+    "expected": "ambiguous",
+    "why": "The color term is negated."
+  },
+  {
+    "rule": "R8",
+    "text": "The brief says \"black\".",
+    "expected": "ambiguous",
+    "why": "The term is quoted."
+  },
+  {
+    "rule": "R8",
+    "text": "Merci de conserver le texte noir sur blanc.",
+    "expected": "ambiguous",
+    "why": "The stated exception phrase is present."
+  },
+  {
+    "rule": "R8",
+    "text": "Spécification : texte noir sur blanc pour le contrat.",
+    "expected": "ambiguous",
+    "why": "The term occurs under the exact context exception."
+  },
+  {
+    "rule": "R8",
+    "text": "La noirceur du scénario inquiète le comité.",
+    "expected": "none",
+    "why": "Noir appears only inside a longer word."
+  },
+  {
+    "rule": "R8",
+    "text": "A blackout interrupted the presentation.",
+    "expected": "none",
+    "why": "Blackout is a longer word, not black."
+  },
+  {
+    "rule": "R8",
+    "text": "The blacklist was archived.",
+    "expected": "none",
+    "why": "Blacklist does not match the standalone term."
+  },
+  {
+    "rule": "R8",
+    "text": "Les panneaux sont noirs.",
+    "expected": "none",
+    "why": "The plural form is not listed."
+  },
+  {
+    "rule": "R8",
+    "text": "La couverture est noire.",
+    "expected": "none",
+    "why": "The feminine form is not listed."
+  },
+  {
+    "rule": "R8",
+    "text": "#design Sam: black-and-white mockup approved.",
+    "expected": "violation",
+    "why": "Hyphens delimit a plainly used black token."
+  },
+  {
+    "rule": "R8",
+    "text": "{\"color\":\"black\"}",
+    "expected": "ambiguous",
+    "why": "The term appears in a quoted JSON string."
+  },
+  {
+    "rule": "R8",
+    "text": "color: black\nquantity: 12",
+    "expected": "violation",
+    "why": "The unquoted YAML value plainly uses the term."
+  },
+  {
+    "rule": "R8",
+    "text": "Le client demande du blanc. Le fournisseur propose du noir.",
+    "expected": "violation",
+    "why": "The second sentence plainly uses the forbidden term."
+  }
+]

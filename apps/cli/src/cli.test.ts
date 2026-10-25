@@ -1,9 +1,16 @@
-import { readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { run } from './cli.js';
 import { unknownFlags } from './flags.js';
+import { status } from './status.js';
+import { sync } from './sync.js';
+import { saveEnrolment } from './testing/enrol.js';
+import { fakeServer, KEY, type Fake } from './testing/fake-server.js';
 import { channelOf } from './version.js';
 
 async function ror(...argv: string[]) {
@@ -87,5 +94,81 @@ describe('unknownFlags', () => {
       '--verbose',
       '--quiet',
     ]);
+  });
+});
+
+describe('ror status after a hand edit of a managed file', () => {
+  let fake: Fake;
+  let home: string;
+  let project: string;
+  const governance = (): string => join(project, '.claude', 'rules', 'ror-governance.md');
+
+  beforeEach(async () => {
+    home = mkdtempSync(join(tmpdir(), 'ror-cli-home-'));
+    project = mkdtempSync(join(tmpdir(), 'ror-cli-project-'));
+    process.env['RUNONROAD_HOME'] = join(home, '.runonroad');
+    process.env['HOME'] = home;
+    process.env['CLAUDE_CONFIG_DIR'] = join(home, '.claude');
+    execFileSync('git', ['init', '-q'], { cwd: project });
+    fake = await fakeServer();
+    fake.next = {
+      operations: [
+        {
+          op: 'write_file',
+          path: '${project}/.claude/rules/ror-governance.md',
+          content:
+            '# RunOnRoad governance\n<!-- Managed by RunOnRoad — do not edit -->\nNo vault.\n',
+        },
+      ],
+      policy: {
+        schema_version: 1,
+        principal: 'mem_lea',
+        mcp_allow: [],
+        rules: [
+          {
+            id: 'g@1.0.0:no-vault',
+            source: 'g@1.0.0',
+            kind: 'path',
+            decision: 'forbid',
+            reason: 'Credentials stay in the vault.',
+            required: true,
+            access: 'any',
+            glob: 'vault/**',
+          },
+        ],
+      },
+    };
+    const enrolment = {
+      api: fake.url,
+      device_token: `rord_${'a'.repeat(43)}`,
+      organization_id: 'org_test',
+      keys: [KEY],
+    };
+    saveEnrolment(enrolment);
+    const capabilities = { sandbox: true, claudeVersion: '2.1.301' };
+    await sync(
+      { fetch, now: () => new Date('2026-10-17T12:00:00.000Z'), projectDir: project, capabilities },
+      enrolment,
+    );
+  });
+
+  afterEach(() => {
+    fake.server.close();
+    rmSync(home, { recursive: true, force: true });
+    rmSync(project, { recursive: true, force: true });
+  });
+
+  it('lists the file as drift, turns enforcement not active and exits 40', async () => {
+    expect(status(project).drifted).toEqual([]);
+    writeFileSync(governance(), `${readFileSync(governance(), 'utf8')}Vault is fine.\n`);
+    const report = status(project);
+    // the lock keeps the path as the bundle wrote it, with its `${project}` root
+    expect(report.drifted).toEqual(['${project}/.claude/rules/ror-governance.md']);
+    expect(report.enforcement).toMatchObject({ active: false });
+    expect(report.enforcement?.why).toContain('drifted');
+    const { code, out } = await ror('status', '--project-dir', project);
+    expect(code).toBe(40);
+    expect(out).toContain('drift: ${project}/.claude/rules/ror-governance.md');
+    expect(out).toContain('enforcement: NOT ACTIVE');
   });
 });

@@ -1,10 +1,9 @@
+import {
+  API_BASE_PATH
+} from "./chunk-TSSXVKCL.js";
+
 // src/client.ts
 import createFetchClient from "openapi-fetch";
-
-// src/constants.ts
-var API_BASE_PATH = "/v1";
-
-// src/client.ts
 var InvalidApiUrlError = class extends Error {
   name = "InvalidApiUrlError";
 };

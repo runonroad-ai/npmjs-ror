@@ -6,9 +6,13 @@
  * Stories. The help page is printed from `VERBS`, so it never announces a verb the
  * dispatch does not run.
  */
+import { derogation } from './derogation-command.js';
 import { acceptedBy, unknownFlags } from './flags.js';
 import { login, type LoginContext } from './login.js';
 import { logout } from './logout.js';
+import { mcp } from './mcp.js';
+import { skillsVerb } from './skills-command.js';
+import { installVerb, statusVerb, syncVerb, uninstallVerb } from './sync-command.js';
 import { RorError } from './token-store.js';
 import { version } from './version.js';
 
@@ -25,8 +29,38 @@ interface Verb {
 
 const VERBS: Readonly<Record<string, Verb>> = {
   help: { summary: 'Prints this page. Also what a bare `ror` prints.', run: (_, c) => help(c) },
+  derogation: {
+    summary: 'Asks to lift an Ask-first rule (request, list, show, answer); never decides.',
+    run: derogation,
+  },
   login: { summary: 'Enrols this device: approve the code it shows in the console.', run: login },
   logout: { summary: 'Revokes this device on the server and removes its token.', run: logout },
+  sync: {
+    summary: 'Fetches and applies the governance of this project (and your skill library).',
+    run: syncVerb,
+  },
+  mcp: {
+    summary:
+      'Relays the MCP server of RunOnRoad to a tool over stdio (an agent or personal token: RUNONROAD_TOKEN).',
+    run: mcp,
+  },
+  skills: {
+    summary: 'Your skill library on this device: list, new, edit, diff, activate, pool, add.',
+    run: skillsVerb,
+  },
+  status: {
+    summary: 'What is applied, what drifted, and what this device enforces.',
+    run: statusVerb,
+  },
+  install: {
+    summary:
+      'Wires the sync into Claude Code (a SessionStart hook) and, with --timer, a refresh timer.',
+    run: installVerb,
+  },
+  uninstall: {
+    summary: 'Takes back everything ror wrote for this project.',
+    run: uninstallVerb,
+  },
   version: {
     summary: 'Prints the version, its channel and the sha256 of this build.',
     run: version,

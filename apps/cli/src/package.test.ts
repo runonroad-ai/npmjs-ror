@@ -6,16 +6,19 @@ import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { dirname, join } from 'node:path';
+import { delimiter, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { afterAll, beforeAll, expect, it } from 'vitest';
+
+// pnpm, npm and the installed bin are `.cmd` shims on Windows: only a shell runs them
+const windows = process.platform === 'win32';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const work = mkdtempSync(join(tmpdir(), 'ror-pack-'));
 
 function sh(command: string, args: string[], cwd: string): string {
-  const result = spawnSync(command, args, { cwd, encoding: 'utf8' });
+  const result = spawnSync(command, args, { cwd, encoding: 'utf8', shell: windows });
   if (result.status !== 0) {
     throw new Error(
       `${command} ${args.join(' ')} exited ${String(result.status)}\n${result.stderr}`,
@@ -47,7 +50,8 @@ it('packs a manifest whose only runtime dependency is @napi-rs/keyring', () => {
 });
 
 it('packs the Apache-2.0 licence text the published package owes its users', () => {
-  expect(sh('tar', ['-xzOf', tarball, 'package/LICENSE'], work)).toContain(
+  // a Windows checkout turns the file's LF into CRLF before it is packed
+  expect(sh('tar', ['-xzOf', tarball, 'package/LICENSE'], work).replaceAll('\r\n', '\n')).toContain(
     'Apache License\n                           Version 2.0',
   );
 });
@@ -55,10 +59,14 @@ it('packs the Apache-2.0 licence text the published package owes its users', () 
 const prefix = join(work, 'prefix');
 
 function installed(verb: string) {
-  return spawnSync(join(prefix, 'node_modules/.bin/ror'), [verb], {
+  return spawnSync(join(prefix, 'node_modules/.bin', windows ? 'ror.cmd' : 'ror'), [verb], {
     cwd: prefix,
     encoding: 'utf8',
-    env: { ...process.env, PATH: `${dirname(process.execPath)}:${process.env.PATH ?? ''}` },
+    shell: windows,
+    env: {
+      ...process.env,
+      PATH: `${dirname(process.execPath)}${delimiter}${process.env.PATH ?? ''}`,
+    },
   });
 }
 

@@ -1,0 +1,10 @@
+{
+  "name": "@runonroad/config",
+  "version": "0.0.0",
+  "private": true,
+  "description": "What the ror client reads from the environment of a machine.",
+  "type": "module",
+  "exports": {
+    "./client": "./src/client-env.ts"
+  }
+}

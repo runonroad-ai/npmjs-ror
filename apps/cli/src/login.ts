@@ -11,7 +11,7 @@ import { DeviceTokenSchema } from '@runonroad/api-contract/device-token';
 import { apiClient } from './api.js';
 import type { Output } from './cli.js';
 import { flagValue } from './flags.js';
-import { readConfig, writeLogin } from './state.js';
+import { resolveServer, writeLogin } from './state.js';
 import { type KeychainBackend, RorError, tokenStore } from './token-store.js';
 import { packageVersion } from './version.js';
 
@@ -71,13 +71,7 @@ const unexpected = (server: string, detail: string) =>
 
 /** Exit codes (SPEC-007 §2): 0 enrolled, 10 denied, 11 expired. */
 export async function login(args: readonly string[], context: LoginContext): Promise<number> {
-  const server = flagValue(args, '--server') ?? readConfig(context.home).server;
-  if (server === undefined) {
-    throw new RorError(
-      'ROR-E112',
-      'No server configured. Run `ror login --server https://<host>`.',
-    );
-  }
+  const server = resolveServer(args, context.home);
   const { keychain: backend, fetch } = context;
   const tokens = tokenStore({
     configuredServer: server,

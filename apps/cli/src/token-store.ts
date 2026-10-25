@@ -9,19 +9,11 @@
  */
 import { Entry } from '@napi-rs/keyring';
 
-const SERVICE = 'runonroad';
+import { RorError } from './ror-error.js';
 
-/** An error `ror` prints with its stable `ROR-Ennn` code (SPEC-007 §1). */
-export class RorError extends Error {
-  constructor(
-    readonly code: string,
-    message: string,
-    options?: ErrorOptions,
-  ) {
-    super(`${code} ${message}`, options);
-    this.name = 'RorError';
-  }
-}
+export { RorError };
+
+const SERVICE = 'runonroad';
 
 /** The keychain, one entry per account under the `runonroad` service. Injected in tests. */
 export interface KeychainBackend {

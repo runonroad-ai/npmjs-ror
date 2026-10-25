@@ -1,0 +1,4 @@
+{
+  "extends": "@runonroad/tsconfig/base.json",
+  "include": ["src"]
+}

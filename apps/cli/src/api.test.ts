@@ -130,8 +130,15 @@ describe('only api.ts sends HTTP requests', () => {
 
   it('finds no other module of apps/cli that does', () => {
     const src = new URL('./', import.meta.url);
+    // Windows lists `testing\\x.ts`: one spelling for the match
     const offenders = readdirSync(src, { recursive: true, encoding: 'utf8' })
-      .filter((file) => /\.[cm]?[jt]s$/u.test(file) && !/\.test\.[cm]?[jt]s$/u.test(file))
+      .map((file) => file.replaceAll('\\', '/'))
+      .filter(
+        (file) =>
+          /\.[cm]?[jt]s$/u.test(file) &&
+          !/\.test\.[cm]?[jt]s$/u.test(file) &&
+          !file.startsWith('testing/'),
+      )
       .filter((file) => file !== 'api.ts')
       .filter((file) => sendsHttp(readFileSync(new URL(file, src), 'utf8')));
     expect(offenders).toEqual([]);

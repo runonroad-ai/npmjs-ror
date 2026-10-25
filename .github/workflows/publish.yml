@@ -41,9 +41,10 @@ jobs:
           fi
           echo "VERSION=$version" >> "$GITHUB_ENV"
       # npm trusted publishing needs npm 11.5.1 or later; the one Node bundles may be older.
-      - name: Use npm 11.6.2
+      # 11.19.0 knows the separate publish and stage permissions of a trusted publisher.
+      - name: Use npm 11.19.0
         run: |
-          npm install --global npm@11.6.2
+          npm install --global npm@11.19.0
           npm --version
       - name: Stop if this version is already on npm
         run: |
@@ -104,4 +105,5 @@ jobs:
         run: |
           tag=latest
           case "$VERSION" in *-*) tag=next ;; esac
-          npm publish "runonroad-ror-$VERSION.tgz" --provenance --access public --tag "$tag"
+          # verbose: npm logs why the trusted publishing exchange failed only at this level.
+          npm publish "runonroad-ror-$VERSION.tgz" --provenance --access public --tag "$tag" --loglevel verbose

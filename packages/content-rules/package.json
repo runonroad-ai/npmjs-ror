@@ -1,0 +1,22 @@
+{
+  "name": "@runonroad/content-rules",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@runonroad/harness-spec": "workspace:*",
+    "@runonroad/tsconfig": "workspace:*"
+  }
+}

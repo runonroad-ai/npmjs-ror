@@ -55,7 +55,9 @@ describe('the api-contract vectors', () => {
       expect(read(file.path.replace('${project}/', ''))).toBe(file.content);
       expect(lock()).toContainEqual({ path: file.path, sha256: sha256(file.content) });
     }
-    expect(fs.statSync(at('.claude/hooks/ror-check.sh')).mode & 0o111).not.toBe(0);
+    // Windows has no execute bit: the file mode of an operation is POSIX only
+    if (process.platform !== 'win32')
+      expect(fs.statSync(at('.claude/hooks/ror-check.sh')).mode & 0o111).not.toBe(0);
     expect(read('AGENTS.md')).toBe(
       '<!-- runonroad:begin ror-governance -->\nFollow the governance.\n<!-- runonroad:end ror-governance -->\n',
     );
@@ -308,5 +310,20 @@ describe('managed_block', () => {
       }).toThrow(managed.RefusedOperationError);
     }
     expect(read('AGENTS.md')).toBe(broken);
+  });
+});
+
+describe('sameMode', () => {
+  it('compares the whole POSIX mode off Windows', () => {
+    expect(managed.sameMode(0o100644, 0o644, 'linux')).toBe(true);
+    expect(managed.sameMode(0o100755, 0o644, 'linux')).toBe(false);
+    expect(managed.sameMode(0o100600, 0o644, 'darwin')).toBe(false);
+  });
+
+  it('compares only writability on Windows: a read-only file is not the writable one asked for', () => {
+    expect(managed.sameMode(0o100666, 0o644, 'win32')).toBe(true);
+    expect(managed.sameMode(0o100666, 0o755, 'win32')).toBe(true);
+    expect(managed.sameMode(0o100444, 0o644, 'win32')).toBe(false);
+    expect(managed.sameMode(0o100444, 0o444, 'win32')).toBe(true);
   });
 });

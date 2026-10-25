@@ -1,4 +1,4 @@
-import { mkdtempSync, readdirSync, readFileSync, rmSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -145,11 +145,25 @@ describe('ror login', () => {
     expect(readdirSync(home)).toEqual([]);
   });
 
-  it('refuses to start without a server, then reuses the one a login recorded', async () => {
-    expect((await login()).err).toContain('ROR-E112');
+  it('reuses the server a login recorded', async () => {
     answers = [ENROLLED, ENROLLED];
     await login('--server', SERVER);
-    expect((await login()).code).toBe(0);
+    const again = await login();
+    // The token lands under the recorded origin, never under the build-time default.
+    expect([again.code, [...again.keychain.keys()]]).toEqual([0, [SERVER]]);
+  });
+
+  it('exits 1 with ROR-E119 before any request when config.yaml is broken, even with --server', async () => {
+    mkdirSync(join(home, '.runonroad'));
+    writeFileSync(join(home, '.runonroad', 'config.yaml'), 'server: [unclosed');
+    let requests = 0;
+    send = (...request) => {
+      requests++;
+      return api(...request);
+    };
+    const { code, err, keychain } = await login('--server', SERVER);
+    expect([code, requests, keychain.size]).toEqual([1, 0, 0]);
+    expect(err).toMatch(/^ROR-E119 .*config\.yaml/u);
   });
 });
 

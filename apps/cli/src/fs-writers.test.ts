@@ -1,5 +1,5 @@
 // ADR-0007: only the managed writer and the `~/.runonroad` state module (#731, `state.ts`)
-// import a file-writing function of `node:fs`. Tests are left out: their fixtures write.
+// import a file-writing function of `node:fs`. Tests and the fixtures of `testing/` are left out: they write.
 import { readdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
@@ -45,8 +45,16 @@ describe('which modules write files', () => {
 
   it('is only the managed writer and the state module', () => {
     const src = fileURLToPath(new URL('.', import.meta.url));
+    // Windows lists `testing\\x.ts`: one spelling for the match
     const offenders = readdirSync(src, { recursive: true, encoding: 'utf8' })
-      .filter((file) => file.endsWith('.ts') && !file.endsWith('.test.ts') && !ALLOWED.has(file))
+      .map((file) => file.replaceAll('\\', '/'))
+      .filter(
+        (file) =>
+          file.endsWith('.ts') &&
+          !file.endsWith('.test.ts') &&
+          !file.startsWith('testing/') &&
+          !ALLOWED.has(file),
+      )
       .filter((file) => fsWriters(readFileSync(`${src}/${file}`, 'utf8')).length > 0);
     expect(offenders).toEqual([]);
   });
